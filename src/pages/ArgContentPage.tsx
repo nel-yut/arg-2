@@ -12,8 +12,81 @@ interface ArgContentPageProps {
   page: ArgPage;
 }
 
-function renderBodyLines(body: string): JSX.Element[] {
-  return body.split(/\r?\n/).map((line, index) => <p key={`${index}-${line.slice(0, 8)}`}>{line}</p>);
+const aboutSectionHeadings = new Set(['団体理念', '設立目的', '活動内容', '教育方針']);
+
+function renderParagraphWithBreaks(text: string, key: string): JSX.Element {
+  const lines = text.split(/\r?\n/);
+  return (
+    <p key={key}>
+      {lines.map((line, index) => (
+        <span key={`${key}-line-${index}`}>
+          {index > 0 ? <br /> : null}
+          {line}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+function renderDefaultBody(body: string): JSX.Element[] {
+  return body
+    .split(/\r?\n\r?\n/)
+    .map((block) => block.trim())
+    .filter((block) => block.length > 0)
+    .map((block, index) => renderParagraphWithBreaks(block, `body-${index}`));
+}
+
+function renderAboutBody(body: string): JSX.Element[] {
+  return body
+    .split(/\r?\n\r?\n/)
+    .map((block) => block.trim())
+    .filter((block) => block.length > 0)
+    .map((block, index) => {
+      if (aboutSectionHeadings.has(block)) {
+        return (
+          <h3 key={`about-heading-${index}`} className="body-subheading">
+            {block}
+          </h3>
+        );
+      }
+      return renderParagraphWithBreaks(block, `about-body-${index}`);
+    });
+}
+
+function renderFaqBody(body: string): JSX.Element[] {
+  return body
+    .split(/\r?\n\r?\n/)
+    .map((block) => block.trim())
+    .filter((block) => block.length > 0)
+    .map((block, index) => {
+      const lines = block.split(/\r?\n/).map((line) => line.trim());
+      const questionLine = lines.find((line) => line.startsWith('Q.'));
+      const answerLine = lines.find((line) => line.startsWith('A.'));
+      if (!questionLine || !answerLine) {
+        return renderParagraphWithBreaks(block, `faq-fallback-${index}`);
+      }
+
+      return (
+        <article key={`faq-${index}`} className="faq-item">
+          <p className="faq-question">
+            <strong>Q.</strong> {questionLine.replace(/^Q\.\s*/, '')}
+          </p>
+          <p className="faq-answer">
+            <strong>A.</strong> {answerLine.replace(/^A\.\s*/, '')}
+          </p>
+        </article>
+      );
+    });
+}
+
+function renderBodyByPage(page: ArgPage): JSX.Element[] {
+  if (page.title === '福音継承教育会とは') {
+    return renderAboutBody(page.body);
+  }
+  if (page.title === 'よくある質問') {
+    return renderFaqBody(page.body);
+  }
+  return renderDefaultBody(page.body);
 }
 
 export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
@@ -21,16 +94,19 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
     markPageRead(page);
   }, [page]);
 
-  const phaseOneEntry = pages.find((p) => p.phaseOrder === 1 && p.phaseIndex === 1);
-  const showPhaseOneEntryLink = page.phaseOrder === 0 && page.phaseIndex === 1 && Boolean(phaseOneEntry);
+  const phaseOneEntryPath = pages.find((p) => p.phaseOrder === 1 && p.phaseIndex === 1)?.path;
+  const showPhaseOneEntryLink = page.phaseOrder === 0 && page.phaseIndex === 1 && Boolean(phaseOneEntryPath);
+
+  const isPhase4Page31 = page.phaseOrder === 4 && page.phaseIndex === 31;
+  const showSearch = page.isSearchVisible && page.siteType !== 'blog' && !isPhase4Page31;
 
   const content = (
-    <article className="arg-page-content">
+    <article className={`arg-page-content page-${page.siteType}`}>
       <h2>{page.title}</h2>
-      <section className="body-section">{renderBodyLines(page.body)}</section>
+      <section className="body-section">{renderBodyByPage(page)}</section>
       {showPhaseOneEntryLink ? (
-        <p>
-          <Link to={phaseOneEntry!.path}>トップページへ</Link>
+        <p className="body-note-link">
+          <Link to={phaseOneEntryPath!}>トップページへ</Link>
         </p>
       ) : null}
       {page.imagePrompts.length > 0 ? (
@@ -52,36 +128,8 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
   }
 
   if (page.siteType === 'archive') {
-    if (page.isSearchVisible) {
-      return <ArchiveLayout>{content}</ArchiveLayout>;
-    }
-
-    return (
-      <div className="layout layout-archive">
-        <header className="site-header">
-          <h1>資料室</h1>
-        </header>
-        <main>
-          {content}
-          <div className="search-fixed hidden" aria-hidden="true" />
-        </main>
-      </div>
-    );
+    return <ArchiveLayout showSearch={showSearch}>{content}</ArchiveLayout>;
   }
 
-  if (page.isSearchVisible) {
-    return <MainSiteLayout>{content}</MainSiteLayout>;
-  }
-
-  return (
-    <div className="layout layout-main">
-      <header className="site-header">
-        <h1>福音継承教育会</h1>
-      </header>
-      <main>
-        {content}
-        <div className="search-fixed hidden" aria-hidden="true" />
-      </main>
-    </div>
-  );
+  return <MainSiteLayout showSearch={showSearch}>{content}</MainSiteLayout>;
 }

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function SearchBox(): JSX.Element {
@@ -12,14 +12,18 @@ export function SearchBox(): JSX.Element {
   };
 
   return (
-    <form className="search-box" onSubmit={onSubmit}>
+    <form className="search-box" onSubmit={onSubmit} role="search" aria-label="サイト内検索">
       <input
+        className="search-input"
         aria-label="検索ワード"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder="検索"
+        required
       />
-      <button type="submit">検索</button>
+      <button className="search-button" type="submit">
+        検索
+      </button>
     </form>
   );
 }

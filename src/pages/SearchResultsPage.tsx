@@ -4,7 +4,6 @@ import { pages } from '../features/pages/pageResolver';
 import { searchPages } from '../features/search/searchService';
 import { getPhaseState } from '../features/phase/phaseStore';
 import { MainSiteLayout } from '../layouts/MainSiteLayout';
-import { PhaseBadge } from '../components/PhaseBadge';
 
 export function SearchResultsPage(): JSX.Element {
   const [searchParams] = useSearchParams();
@@ -27,7 +26,6 @@ export function SearchResultsPage(): JSX.Element {
           </div>
         )}
       </section>
-      <PhaseBadge phaseLabel={`Phase${currentPhase}`} phaseIndex={0} />
     </MainSiteLayout>
   );
 }

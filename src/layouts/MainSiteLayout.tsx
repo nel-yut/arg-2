@@ -1,16 +1,125 @@
-﻿import type { PropsWithChildren } from 'react';
+import { useEffect, useState, type FocusEvent, type PropsWithChildren } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { SearchBox } from '../components/SearchBox';
+import { pages } from '../features/pages/pageResolver';
+import type { ArgPage } from '../types/page';
 
-export function MainSiteLayout({ children }: PropsWithChildren): JSX.Element {
+interface MainSiteLayoutProps extends PropsWithChildren {
+  showSearch?: boolean;
+}
+
+interface MenuDef {
+  label: string;
+  overviewKey: string;
+  titleFallback: string[];
+}
+
+const menuDefs: MenuDef[] = [
+  { label: 'TOPページ', overviewKey: 'TOPページ', titleFallback: ['TOP'] },
+  { label: '福音継承教育会とは', overviewKey: '福音継承教育会とは', titleFallback: ['福音継承教育会とは'] },
+  { label: '定例行事のご案内', overviewKey: '定例行事のご案内', titleFallback: ['定例行事のご案内'] },
+  { label: '施設について', overviewKey: '施設について', titleFallback: ['施設について'] },
+  { label: '入会のご案内', overviewKey: '入会のご案内', titleFallback: ['入会の案内', '入会のご案内'] },
+  { label: 'よくある質問', overviewKey: 'よくある質問', titleFallback: ['よくある質問'] },
+];
+
+function byPhaseOrderAndIndex(a: ArgPage, b: ArgPage): number {
+  if (a.phaseOrder !== b.phaseOrder) {
+    return a.phaseOrder - b.phaseOrder;
+  }
+  return a.phaseIndex - b.phaseIndex;
+}
+
+function findByTitles(titles: string[]): ArgPage[] {
+  return pages.filter((p) => p.siteType === 'main' && titles.includes(p.title)).sort(byPhaseOrderAndIndex);
+}
+
+function findMenuChildren(overviewKey: string, titleFallback: string[]): ArgPage[] {
+  const fromOverview = pages
+    .filter((p) => p.siteType === 'main' && (p.overview ?? '').includes(`メニュー「${overviewKey}」`))
+    .sort(byPhaseOrderAndIndex);
+
+  if (fromOverview.length > 0) {
+    return fromOverview;
+  }
+
+  return findByTitles(titleFallback);
+}
+
+export function MainSiteLayout({ children, showSearch = true }: MainSiteLayoutProps): JSX.Element {
+  const location = useLocation();
+  const [openMenuLabel, setOpenMenuLabel] = useState<string | null>(null);
+  const topPath = findByTitles(['TOP'])[0]?.path ?? '/404';
+
+  useEffect(() => {
+    setOpenMenuLabel(null);
+    const active = document.activeElement;
+    if (active instanceof HTMLElement) {
+      active.blur();
+    }
+  }, [location.pathname, location.search]);
+
+  const handleMenuBlur = (event: FocusEvent<HTMLLIElement>): void => {
+    const next = event.relatedTarget;
+    if (!(next instanceof Node) || !event.currentTarget.contains(next)) {
+      setOpenMenuLabel(null);
+    }
+  };
+
   return (
     <div className="layout layout-main">
-      <header className="site-header">
-        <h1>福音継承教育会</h1>
+      <header className="site-header main-header">
+        <div className="header-top-row">
+          <div className="title-group">
+            <h1 className="site-title">
+              <Link to={topPath}>福音継承教育会</Link>
+            </h1>
+            <p className="site-subcopy">地域に根ざした学びと継承のための教育共同体</p>
+          </div>
+          {showSearch ? (
+            <div className="search-fixed search-in-header">
+              <SearchBox />
+            </div>
+          ) : null}
+        </div>
+
+        <nav className="global-nav" aria-label="グローバルメニュー">
+          <ul className="global-nav-root">
+            {menuDefs.map((menu) => {
+              const childrenPages = findMenuChildren(menu.overviewKey, menu.titleFallback);
+              const topPathForMenu = childrenPages[0]?.path ?? '/404';
+              const isOpen = openMenuLabel === menu.label;
+
+              return (
+                <li
+                  key={menu.label}
+                  className={`global-nav-item${isOpen ? ' is-open' : ''}`}
+                  onMouseEnter={() => setOpenMenuLabel(menu.label)}
+                  onMouseLeave={() => setOpenMenuLabel(null)}
+                  onFocus={() => setOpenMenuLabel(menu.label)}
+                  onBlur={handleMenuBlur}
+                >
+                  <Link className="global-nav-link" to={topPathForMenu} onClick={() => setOpenMenuLabel(null)}>
+                    {menu.label}
+                  </Link>
+                  <ul className="global-nav-menu">
+                    {childrenPages.map((child) => (
+                      <li key={child.path}>
+                        <Link to={child.path} onClick={() => setOpenMenuLabel(null)}>
+                          {child.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
       </header>
-      <div className="search-fixed">
-        <SearchBox />
-      </div>
-      <main>{children}</main>
+      <main>
+        <section className="main-content-shell">{children}</section>
+      </main>
     </div>
   );
 }

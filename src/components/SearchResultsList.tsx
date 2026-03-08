@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import type { SearchResult } from '../types/search';
 
 interface SearchResultsListProps {
@@ -10,7 +10,9 @@ export function SearchResultsList({ results }: SearchResultsListProps): JSX.Elem
     <ul className="search-results-list">
       {results.map((result) => (
         <li key={result.path}>
-          <Link to={result.path}>{result.title}</Link>
+          <Link className="search-result-link" to={result.path}>
+            {result.title}
+          </Link>
         </li>
       ))}
     </ul>
