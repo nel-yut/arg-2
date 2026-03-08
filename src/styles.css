@@ -1,0 +1,205 @@
+﻿:root {
+  color: #171b1f;
+  background: #f5f4ef;
+  font-family: 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+.layout {
+  min-height: 100vh;
+  padding: 24px;
+  position: relative;
+}
+
+.layout main {
+  max-width: 840px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.layout-blog {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(255, 255, 255, 0.9), transparent 30%),
+    linear-gradient(180deg, #f4ede2 0%, #efe7dc 45%, #ece9f4 100%);
+}
+
+.layout-main {
+  background: #f8f9fb;
+}
+
+.layout-archive {
+  background: #07090d;
+  color: #d7dde5;
+}
+
+.site-header {
+  max-width: 840px;
+  margin: 0 auto 24px;
+  border-bottom: 1px solid rgba(90, 90, 90, 0.35);
+}
+
+.blog-header {
+  border-bottom-color: rgba(102, 70, 50, 0.35);
+  padding-bottom: 12px;
+}
+
+.blog-kicker {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #7e6350;
+}
+
+.blog-header h1 {
+  margin: 0;
+  font-size: 38px;
+  letter-spacing: 0.02em;
+}
+
+.blog-description {
+  margin: 8px 0 0;
+  color: #6a5f57;
+}
+
+.blog-main {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.blog-post-card {
+  background: #fffdfb;
+  border: 1px solid #d8c8b9;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(68, 53, 40, 0.08);
+  padding: 28px;
+}
+
+.layout-blog .arg-page-content h2 {
+  margin: 0 0 12px;
+  font-size: 32px;
+}
+
+.layout-blog .arg-page-content .body-section {
+  font-size: 18px;
+  line-height: 1.95;
+}
+
+.layout-blog .arg-page-content a {
+  color: #124c8b;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.layout-blog .image-prompt-block {
+  background: #fff7ef;
+  border: 1px solid #d6c3af;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 14px 0;
+}
+
+@media (max-width: 768px) {
+  .blog-header h1 {
+    font-size: 30px;
+  }
+
+  .blog-post-card {
+    padding: 20px;
+  }
+
+  .layout-blog .arg-page-content h2 {
+    font-size: 28px;
+  }
+
+  .layout-blog .arg-page-content .body-section {
+    font-size: 16px;
+  }
+}
+
+.search-fixed {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+}
+
+.search-fixed.hidden {
+  display: none;
+}
+
+.search-box {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #a7adb8;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+.search-box input {
+  width: 160px;
+  border: 1px solid #a7adb8;
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+
+.search-box button {
+  border: 1px solid #7d8798;
+  background: #f0f2f7;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.arg-page-content h2 {
+  margin-top: 0;
+}
+
+.body-section p {
+  margin: 0 0 8px;
+  white-space: pre-wrap;
+}
+
+.image-prompt-block {
+  border: 1px dashed #939aa6;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+.phase-badge {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.search-results-list {
+  list-style: none;
+  padding: 0;
+}
+
+.search-results-list li {
+  margin-bottom: 8px;
+}
+
+.search-empty p {
+  margin: 4px 0;
+}
+
+.not-found {
+  max-width: 680px;
+  margin: 10vh auto;
+  text-align: center;
+}
