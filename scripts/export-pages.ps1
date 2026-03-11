@@ -1,6 +1,6 @@
-﻿param(
+param(
   [string]$InputPath = "source/spreadsheet/arg_route_v10_edit.xlsx",
-  [string]$OutputPath = "src/data/pages.json"
+  [string]$OutputPath = "src/data/pages.ts"
 )
 
 Set-StrictMode -Version Latest
@@ -77,6 +77,11 @@ function Get-SiteType {
   if ($Category -eq '資料室') { return 'archive' }
   if ($PhaseLabel -eq 'Phase5') { return 'ending' }
   return 'main'
+}
+
+function Escape-TemplateLiteral {
+  param([string]$Value)
+  return $Value.Replace('\', '\\').Replace('`', '\`').Replace('${', '\${')
 }
 
 function New-Slug {
@@ -203,8 +208,44 @@ try {
     New-Item -ItemType Directory -Path $outDir -Force | Out-Null
   }
 
-  $json = $pages | ConvertTo-Json -Depth 8
-  Set-Content -Path $OutputPath -Value $json -Encoding UTF8
+  $lines = New-Object System.Collections.Generic.List[string]
+  $lines.Add("import { expandPageSources } from '../features/pages/expandPageSources';") | Out-Null
+  $lines.Add("import type { ArgPage, ArgPageSource } from '../types/page';") | Out-Null
+  $lines.Add('') | Out-Null
+  $lines.Add('// Edit `body` with normal line breaks.') | Out-Null
+  $lines.Add('// If a page changes by phase, add `phaseVariants` inside the same block.') | Out-Null
+  $lines.Add('export const pageSources: ArgPageSource[] = [') | Out-Null
+
+  foreach ($page in $pages) {
+    $lines.Add('  {') | Out-Null
+
+    foreach ($prop in $page.PSObject.Properties) {
+      $name = $prop.Name
+      $value = $prop.Value
+
+      if ($value -is [string]) {
+        if ($name -eq 'body') {
+          $serialized = [string][char]96 + (Escape-TemplateLiteral -Value $value) + [char]96
+        }
+        else {
+          $serialized = ConvertTo-Json -InputObject $value -Compress
+        }
+      }
+      else {
+        $serialized = ConvertTo-Json -InputObject $value -Compress
+      }
+
+      $lines.Add("    ${name}: ${serialized},") | Out-Null
+    }
+
+    $lines.Add('  },') | Out-Null
+  }
+
+  $lines.Add('];') | Out-Null
+  $lines.Add('') | Out-Null
+  $lines.Add('export const pages: ArgPage[] = expandPageSources(pageSources);') | Out-Null
+  $lines.Add('') | Out-Null
+  Set-Content -Path $OutputPath -Value $lines -Encoding UTF8
   Write-Output ("Wrote {0} pages to {1}" -f $pages.Count, $OutputPath)
 }
 finally {

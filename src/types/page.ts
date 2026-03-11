@@ -1,4 +1,4 @@
-﻿export type SiteType = 'blog' | 'main' | 'archive' | 'ending';
+export type SiteType = 'blog' | 'main' | 'archive' | 'ending';
 
 export interface ArgPage {
   id: string;
@@ -17,4 +17,13 @@ export interface ArgPage {
   imagePrompts: string[];
   isSearchVisible: boolean;
   isPhaseBadgeVisible: boolean;
+}
+
+export interface ArgPagePhaseVariant extends Partial<ArgPage> {
+  phaseOrder: number;
+  phaseIndex: number;
+}
+
+export interface ArgPageSource extends ArgPage {
+  phaseVariants?: ArgPagePhaseVariant[];
 }

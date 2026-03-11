@@ -1,6 +1,6 @@
-﻿import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { SearchResultsList } from '../components/SearchResultsList';
-import { pages } from '../features/pages/pageResolver';
+import { getResolvedPagesForPhase } from '../features/pages/pageResolver';
 import { searchPages } from '../features/search/searchService';
 import { getPhaseState } from '../features/phase/phaseStore';
 import { MainSiteLayout } from '../layouts/MainSiteLayout';
@@ -9,7 +9,8 @@ export function SearchResultsPage(): JSX.Element {
   const [searchParams] = useSearchParams();
   const query = (searchParams.get('q') ?? '').trim();
   const { currentPhase } = getPhaseState();
-  const results = searchPages(pages, query, currentPhase);
+  const visiblePages = getResolvedPagesForPhase(currentPhase);
+  const results = searchPages(visiblePages, query, currentPhase);
 
   return (
     <MainSiteLayout>

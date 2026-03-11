@@ -1,7 +1,8 @@
 import { useEffect, useState, type FocusEvent, type PropsWithChildren } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SearchBox } from '../components/SearchBox';
-import { pages } from '../features/pages/pageResolver';
+import { getPhaseState } from '../features/phase/phaseStore';
+import { getResolvedPagesForPhase } from '../features/pages/pageResolver';
 import type { ArgPage } from '../types/page';
 
 interface MainSiteLayoutProps extends PropsWithChildren {
@@ -19,7 +20,7 @@ const menuDefs: MenuDef[] = [
   { label: '福音継承教育会とは', overviewKey: '福音継承教育会とは', titleFallback: ['福音継承教育会とは'] },
   { label: '定例行事のご案内', overviewKey: '定例行事のご案内', titleFallback: ['定例行事のご案内'] },
   { label: '施設について', overviewKey: '施設について', titleFallback: ['施設について'] },
-  { label: '入会のご案内', overviewKey: '入会のご案内', titleFallback: ['入会の案内', '入会のご案内'] },
+  { label: '入会のご案内', overviewKey: '入会の案内', titleFallback: ['入会の案内', '入会のご案内'] },
   { label: 'よくある質問', overviewKey: 'よくある質問', titleFallback: ['よくある質問'] },
 ];
 
@@ -27,29 +28,32 @@ function byPhaseOrderAndIndex(a: ArgPage, b: ArgPage): number {
   if (a.phaseOrder !== b.phaseOrder) {
     return a.phaseOrder - b.phaseOrder;
   }
+
   return a.phaseIndex - b.phaseIndex;
 }
 
-function findByTitles(titles: string[]): ArgPage[] {
-  return pages.filter((p) => p.siteType === 'main' && titles.includes(p.title)).sort(byPhaseOrderAndIndex);
+function findByTitles(pagesInput: ArgPage[], titles: string[]): ArgPage[] {
+  return pagesInput.filter((page) => page.siteType === 'main' && titles.includes(page.title)).sort(byPhaseOrderAndIndex);
 }
 
-function findMenuChildren(overviewKey: string, titleFallback: string[]): ArgPage[] {
-  const fromOverview = pages
-    .filter((p) => p.siteType === 'main' && (p.overview ?? '').includes(`メニュー「${overviewKey}」`))
+function findMenuChildren(pagesInput: ArgPage[], overviewKey: string, titleFallback: string[]): ArgPage[] {
+  const fromOverview = pagesInput
+    .filter((page) => page.siteType === 'main' && (page.overview ?? '').includes(`メニュー「${overviewKey}」`))
     .sort(byPhaseOrderAndIndex);
 
   if (fromOverview.length > 0) {
     return fromOverview;
   }
 
-  return findByTitles(titleFallback);
+  return findByTitles(pagesInput, titleFallback);
 }
 
 export function MainSiteLayout({ children, showSearch = true }: MainSiteLayoutProps): JSX.Element {
   const location = useLocation();
   const [openMenuLabel, setOpenMenuLabel] = useState<string | null>(null);
-  const topPath = findByTitles(['TOP'])[0]?.path ?? '/404';
+  const { currentPhase } = getPhaseState();
+  const visiblePages = getResolvedPagesForPhase(currentPhase);
+  const topPath = findByTitles(visiblePages, ['TOP'])[0]?.path ?? '/404';
 
   useEffect(() => {
     setOpenMenuLabel(null);
@@ -86,7 +90,7 @@ export function MainSiteLayout({ children, showSearch = true }: MainSiteLayoutPr
         <nav className="global-nav" aria-label="グローバルメニュー">
           <ul className="global-nav-root">
             {menuDefs.map((menu) => {
-              const childrenPages = findMenuChildren(menu.overviewKey, menu.titleFallback);
+              const childrenPages = findMenuChildren(visiblePages, menu.overviewKey, menu.titleFallback);
               const topPathForMenu = childrenPages[0]?.path ?? '/404';
               const isOpen = openMenuLabel === menu.label;
 

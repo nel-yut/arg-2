@@ -1,6 +1,6 @@
-﻿import type { ArgPage } from '../../types/page';
+import type { ArgPage } from '../../types/page';
 
-export function isSearchableInCurrentPhase(page: ArgPage, currentPhase: number): boolean {
+export function isPageAccessibleInCurrentPhase(page: ArgPage, currentPhase: number): boolean {
   if (page.phaseOrder === 99) {
     return false;
   }
@@ -10,4 +10,8 @@ export function isSearchableInCurrentPhase(page: ArgPage, currentPhase: number):
   }
 
   return page.phaseOrder === currentPhase + 1 && page.phaseIndex === 1;
+}
+
+export function isSearchableInCurrentPhase(page: ArgPage, currentPhase: number): boolean {
+  return isPageAccessibleInCurrentPhase(page, currentPhase);
 }
