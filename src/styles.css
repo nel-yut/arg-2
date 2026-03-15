@@ -297,6 +297,121 @@ a {
   margin: 0;
 }
 
+/* ── TOP page ─────────────────────────────────── */
+
+.top-hero {
+  text-align: center;
+  padding: 40px 24px 36px;
+  margin-bottom: 28px;
+  background: linear-gradient(to bottom, #edeae0, #ffffff);
+  border-bottom: 1px solid #d0cdbd;
+}
+
+.top-hero-catch {
+  margin: 0 0 14px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2e2a1e;
+  letter-spacing: 0.1em;
+}
+
+.top-hero-sub {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #5a5240;
+  line-height: 2.0;
+}
+
+.top-section {
+  margin-bottom: 30px;
+}
+
+.top-section-heading {
+  margin: 0 0 12px;
+  padding: 3px 0 3px 10px;
+  border-left: 3px solid #8a7a50;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3a3520;
+}
+
+.top-news-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #ccc9ba;
+}
+
+.top-news-item {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 10px 6px;
+  border-bottom: 1px solid #ccc9ba;
+  font-size: 0.88rem;
+}
+
+.top-news-date {
+  flex-shrink: 0;
+  color: #7a6a40;
+  font-size: 0.82rem;
+}
+
+.top-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.top-card {
+  background: #f5f3ea;
+  border: 1px solid #c2bfb0;
+  padding: 18px 16px 16px;
+}
+
+.top-card-heading {
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d0cdc0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #3a3520;
+}
+
+.top-card-body {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: #5a5240;
+  line-height: 1.85;
+}
+
+.top-card-link {
+  font-size: 0.82rem;
+}
+
+.top-message {
+  padding: 20px 20px 16px;
+  background: #f5f3ea;
+  border: 1px solid #c2bfb0;
+  border-left: 3px solid #8a7a50;
+}
+
+.top-message-text {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: #3a3520;
+  line-height: 2.0;
+}
+
+.top-message-author {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6a5e40;
+  text-align: right;
+}
+
+/* ─────────────────────────────────────────────── */
+
 .phase-badge {
   margin-top: 24px;
   padding-top: 10px;
