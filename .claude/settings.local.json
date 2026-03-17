@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(grep -n \"^\\\\s*{\\\\s*$\\\\|^\\\\s*id:\\\\|^\\\\s*slug:\\\\|^\\\\s*path:\\\\|^\\\\s*title:\\\\|^\\\\s*phaseOrder:\\\\|^\\\\s*phaseIndex:\" /c/Users/yutan/OneDrive/ドキュメント/Git/arg/arg-2/src/data/pages.ts)",
+      "Bash(python3:*)"
+    ]
+  }
+}

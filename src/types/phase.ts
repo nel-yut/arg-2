@@ -6,4 +6,5 @@
 export const STORAGE_KEYS = {
   currentPhase: 'currentPhase',
   readPages: 'readPages',
+  blogDead: 'blogDead',
 } as const;

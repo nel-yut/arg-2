@@ -2,7 +2,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { ArgContentPage } from '../pages/ArgContentPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { getPhaseState } from '../features/phase/phaseStore';
-import { findStartPagePath, resolvePageByPath } from '../features/pages/pageResolver';
+import { findStartPagePath, pages, resolvePageByPath } from '../features/pages/pageResolver';
+import { readBlogDeadFlag } from '../utils/storage';
 
 export function RootRedirect(): JSX.Element {
   return <Navigate to={findStartPagePath()} replace />;
@@ -15,6 +16,11 @@ export function DynamicPageRoute(): JSX.Element {
 
   if (!page) {
     return <NotFoundPage />;
+  }
+
+  if (readBlogDeadFlag() && page.siteType === 'blog' && page.slug !== '404') {
+    const blog404 = pages.find((p) => p.siteType === 'blog' && p.slug === '404');
+    if (blog404) return <ArgContentPage page={blog404} />;
   }
 
   return <ArgContentPage page={page} />;
