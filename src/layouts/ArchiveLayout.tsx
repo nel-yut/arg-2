@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react';
+import { Link } from 'react-router-dom';
 import { SearchBox } from '../components/SearchBox';
 
 interface ArchiveLayoutProps extends PropsWithChildren {
@@ -20,6 +21,13 @@ export function ArchiveLayout({ children, showSearch = true }: ArchiveLayoutProp
             </div>
           ) : null}
         </div>
+        <nav className="global-nav archive-nav" aria-label="アーカイブメニュー">
+          <ul className="global-nav-root">
+            <li className="global-nav-item">
+              <Link className="global-nav-link" to="/history">履歴</Link>
+            </li>
+          </ul>
+        </nav>
       </header>
       <main>
         <section className="archive-content-shell">{children}</section>

@@ -332,6 +332,12 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
                 <span className="blog-post-category">{meta.category}</span>
               </div>
             ) : null}
+            <details className="blog-game-info">
+              <summary>このゲームについて</summary>
+              <div className="blog-game-info-body">
+                <p>このゲームの目的はPhase-Endに到達することです。ページを読み進め、本文中のキーワードで検索しながら次の手がかりを辿ってください。すべての記録を読み解いた先に、Phase-Endが待っています。</p>
+              </div>
+            </details>
             <section className="body-section">{renderBodyByPage(page, currentPhase)}</section>
             {showPhaseOneEntryLink ? (
               <p className="body-note-link">

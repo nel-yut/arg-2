@@ -43,8 +43,8 @@ a {
 }
 
 .layout-blog {
-  background: #f4f1e8;
-  color: #2a2520;
+  background: #edf1f7;
+  color: #252c38;
 }
 
 .site-header {
@@ -96,6 +96,21 @@ a {
 
 .archive-header .site-subcopy {
   color: #a8b0b8;
+}
+
+.archive-nav {
+  border-top-color: #444c54;
+}
+
+.archive-nav .global-nav-link {
+  border-color: #444c54;
+  background: #0f1215;
+  color: #cfd3d7;
+}
+
+.archive-nav .global-nav-link:hover {
+  background: #1a2028;
+  color: #e8eaec;
 }
 
 .global-nav {
@@ -516,8 +531,8 @@ a {
 }
 
 .blog-header {
-  border-color: #b8ab9f;
-  background: #eee8db;
+  border-color: #9db8d4;
+  background: #dae6f4;
 }
 
 .blog-header h1 {
@@ -529,12 +544,12 @@ a {
 .blog-kicker {
   margin: 0 0 4px;
   font-size: 12px;
-  color: #705f4f;
+  color: #4c6a8c;
 }
 
 .blog-description {
   margin: 8px 0 0;
-  color: #655a4f;
+  color: #4a6278;
 }
 
 .blog-main {
@@ -546,20 +561,20 @@ a {
 }
 
 .blog-content {
-  border: 1px solid #b8ab9f;
-  background: #fcfaf4;
+  border: 1px solid #9db8d4;
+  background: #f5f8fc;
   padding: 16px;
 }
 
 .page-blog h2 {
   font-size: 34px;
-  border-bottom-color: #c4b8a9;
-  border-left-color: #ab9a86;
+  border-bottom-color: #9ab8d2;
+  border-left-color: #5a8ab8;
 }
 
 .blog-sidebar {
-  border: 1px solid #b8ab9f;
-  background: #f7f2e8;
+  border: 1px solid #9db8d4;
+  background: #e8f0f8;
   padding: 12px;
   align-self: start;
 }
@@ -588,8 +603,8 @@ a {
   align-items: center;
   margin: 4px 0 16px;
   font-size: 13px;
-  color: #7a6e63;
-  border-bottom: 1px solid #d8cfc4;
+  color: #5c7a96;
+  border-bottom: 1px solid #b0cce4;
   padding-bottom: 10px;
 }
 
@@ -598,10 +613,52 @@ a {
 }
 
 .blog-post-category {
-  background: #e6dfd4;
+  background: #cfe0f0;
   padding: 1px 8px;
   border-radius: 3px;
   font-size: 12px;
+}
+
+/* Blog game info collapsible */
+.blog-game-info {
+  margin: 0 0 20px;
+  border: 1px solid #b0cce4;
+  border-radius: 4px;
+  background: #deeaf6;
+}
+
+.blog-game-info summary {
+  cursor: pointer;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #6a90b0;
+  user-select: none;
+  list-style: none;
+}
+
+.blog-game-info summary::-webkit-details-marker {
+  display: none;
+}
+
+.blog-game-info summary::after {
+  content: ' ▼';
+  font-size: 10px;
+}
+
+.blog-game-info[open] summary::after {
+  content: ' ▲';
+}
+
+.blog-game-info-body {
+  padding: 8px 12px 10px;
+  border-top: 1px solid #b0cce4;
+}
+
+.blog-game-info-body p {
+  font-size: 12px;
+  color: #4a6a84;
+  margin: 0;
+  line-height: 1.8;
 }
 
 /* Blog sidebar sections */
@@ -621,7 +678,7 @@ a {
 
 .blog-sidebar-bio {
   font-size: 13px;
-  color: #655a4f;
+  color: #4a6278;
   margin: 0;
 }
 
@@ -634,13 +691,13 @@ a {
 .blog-sidebar-recent li {
   font-size: 13px;
   padding: 4px 0;
-  border-bottom: 1px solid #d8cfc4;
+  border-bottom: 1px solid #b0cce4;
 }
 
 .blog-sidebar-recent-date {
   display: block;
   font-size: 11px;
-  color: #8a7e73;
+  color: #6a8aaa;
   margin-bottom: 2px;
 }
 
@@ -648,13 +705,13 @@ a {
 .blog-comments {
   margin-top: 32px;
   padding-top: 20px;
-  border-top: 1px solid #d8cfc4;
+  border-top: 1px solid #b0cce4;
 }
 
 .blog-comments-heading {
   font-size: 18px;
   margin: 0 0 16px;
-  color: #3a332c;
+  color: #2a3a4e;
 }
 
 .blog-comment-list {
@@ -666,8 +723,8 @@ a {
 .blog-comment-item {
   padding: 12px;
   margin-bottom: 10px;
-  background: #f3ede3;
-  border: 1px solid #d8cfc4;
+  background: #e8f2fa;
+  border: 1px solid #b0cce4;
   border-radius: 4px;
 }
 
@@ -680,7 +737,7 @@ a {
 
 .blog-comments-empty {
   font-size: 14px;
-  color: #8a7e73;
+  color: #6a8aaa;
   margin: 0 0 20px;
 }
 
@@ -695,9 +752,9 @@ a {
   padding: 10px;
   font-size: 14px;
   font-family: inherit;
-  border: 1px solid #b8ab9f;
+  border: 1px solid #9db8d4;
   border-radius: 4px;
-  background: #fdfaf5;
+  background: #f8fbfd;
   resize: vertical;
   box-sizing: border-box;
   line-height: 1.6;
@@ -705,7 +762,7 @@ a {
 
 .blog-comment-textarea:focus {
   outline: none;
-  border-color: #8a7e73;
+  border-color: #4a7aaa;
 }
 
 .blog-comment-submit {
@@ -713,7 +770,7 @@ a {
   padding: 7px 20px;
   font-size: 13px;
   font-family: inherit;
-  background: #7a6e63;
+  background: #4a7aaa;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -721,12 +778,12 @@ a {
 }
 
 .blog-comment-submit:disabled {
-  background: #b8ab9f;
+  background: #9ab8d4;
   cursor: not-allowed;
 }
 
 .blog-comment-submit:not(:disabled):hover {
-  background: #5a4e43;
+  background: #2a5a8a;
 }
 
 /* Blog 404 */
@@ -738,13 +795,13 @@ a {
 .blog-404-code {
   font-size: 24px;
   font-weight: bold;
-  color: #7a6e63;
+  color: #5a7a9a;
   margin: 0 0 12px;
 }
 
 .blog-404-message {
   font-size: 15px;
-  color: #655a4f;
+  color: #4a6278;
   margin: 0;
 }
 
