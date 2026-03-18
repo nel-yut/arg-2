@@ -91,6 +91,7 @@ export function MainSiteLayout({ children, showSearch = true }: MainSiteLayoutPr
           <ul className="global-nav-root">
             {menuDefs.map((menu) => {
               const childrenPages = findMenuChildren(visiblePages, menu.overviewKey, menu.titleFallback);
+              const isTop = menu.label === 'TOPページ';
               const topPathForMenu = childrenPages[0]?.path ?? '/404';
               const isOpen = openMenuLabel === menu.label;
 
@@ -103,9 +104,15 @@ export function MainSiteLayout({ children, showSearch = true }: MainSiteLayoutPr
                   onFocus={() => setOpenMenuLabel(menu.label)}
                   onBlur={handleMenuBlur}
                 >
-                  <Link className="global-nav-link" to={topPathForMenu} onClick={() => setOpenMenuLabel(null)}>
-                    {menu.label}
-                  </Link>
+                  {isTop ? (
+                    <Link className="global-nav-link" to={topPathForMenu} onClick={() => setOpenMenuLabel(null)}>
+                      {menu.label}
+                    </Link>
+                  ) : (
+                    <button className="global-nav-link global-nav-link-toggle" type="button" onClick={() => setOpenMenuLabel(isOpen ? null : menu.label)}>
+                      {menu.label}
+                    </button>
+                  )}
                   <ul className="global-nav-menu">
                     {childrenPages.map((child) => (
                       <li key={child.path}>
@@ -118,6 +125,11 @@ export function MainSiteLayout({ children, showSearch = true }: MainSiteLayoutPr
                 </li>
               );
             })}
+            <li className="global-nav-item">
+              <Link className="global-nav-link" to="/history" onClick={() => setOpenMenuLabel(null)}>
+                履歴
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>

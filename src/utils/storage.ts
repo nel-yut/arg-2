@@ -51,6 +51,43 @@ export function writeBlogDeadFlag(): void {
   }
 }
 
+export interface SearchHistoryEntry {
+  path: string;
+  title: string;
+}
+
+const SEARCH_HISTORY_KEY = 'searchHistory';
+const MAX_SEARCH_HISTORY = 30;
+
+export function readSearchHistory(): SearchHistoryEntry[] {
+  try {
+    const raw = localStorage.getItem(SEARCH_HISTORY_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed)
+      ? parsed.filter(
+          (x): x is SearchHistoryEntry =>
+            typeof x === 'object' &&
+            x !== null &&
+            typeof (x as SearchHistoryEntry).path === 'string' &&
+            typeof (x as SearchHistoryEntry).title === 'string',
+        )
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+export function writeSearchHistoryEntry(entry: SearchHistoryEntry): void {
+  try {
+    const history = readSearchHistory().filter((h) => h.path !== entry.path);
+    const updated = [entry, ...history].slice(0, MAX_SEARCH_HISTORY);
+    localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(updated));
+  } catch {
+    // noop
+  }
+}
+
 const BLOG_COMMENTS_KEY = 'blogComments';
 
 export function readBlogComments(): string[] {
