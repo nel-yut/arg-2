@@ -15,6 +15,8 @@ export interface ArgPage {
   pageIdRaw?: string;
   searchWords: string[];
   imagePrompts: string[];
+  images?: string[];
+  pdfs?: string[];
   isSearchVisible: boolean;
   isPhaseBadgeVisible: boolean;
 }

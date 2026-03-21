@@ -1,8 +1,13 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MainSiteLayout } from '../layouts/MainSiteLayout';
 import { readSearchHistory } from '../utils/storage';
 
 export function HistoryPage(): JSX.Element {
+  useEffect(() => {
+    document.title = '福音継承教育会';
+    return () => { document.title = 'ARG'; };
+  }, []);
   const history = readSearchHistory();
 
   return (

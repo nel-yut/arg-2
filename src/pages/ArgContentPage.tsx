@@ -20,12 +20,15 @@ const BLOG_COMMENT_TRIGGER = '/2024-09-18-77578';
 const BLOG_DEAD_REDIRECT = '/record-defense-67748';
 
 const BLOG_POST_META: Record<string, { date: string; category: string }> = {
-  'inquiry': { date: '2024年11月10日', category: '友人のこと' },
+  'inquiry': { date: '2021年11月10日', category: '友人のこと' },
 };
+
+const COMMENTS_PER_PAGE = 3;
 
 function BlogCommentSection({ currentPhase }: { currentPhase: number }): JSX.Element {
   const [draft, setDraft] = useState('');
   const [comments, setComments] = useState<string[]>(() => readBlogComments());
+  const [commentPage, setCommentPage] = useState(1);
   const navigate = useNavigate();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
@@ -40,21 +43,35 @@ function BlogCommentSection({ currentPhase }: { currentPhase: number }): JSX.Ele
     }
 
     writeBlogComment(trimmed);
-    setComments(readBlogComments());
+    const updated = readBlogComments();
+    setComments(updated);
+    setCommentPage(1);
     setDraft('');
   }
+
+  const totalPages = Math.max(1, Math.ceil(comments.length / COMMENTS_PER_PAGE));
+  const pagedComments = comments.slice((commentPage - 1) * COMMENTS_PER_PAGE, commentPage * COMMENTS_PER_PAGE);
 
   return (
     <section className="blog-comments">
       <h3 className="blog-comments-heading">コメント（{comments.length}件）</h3>
       {comments.length > 0 ? (
-        <ul className="blog-comment-list">
-          {comments.map((comment, i) => (
-            <li key={i} className="blog-comment-item">
-              <p className="blog-comment-body">{comment}</p>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="blog-comment-list">
+            {pagedComments.map((comment, i) => (
+              <li key={i} className="blog-comment-item">
+                <p className="blog-comment-body">{comment}</p>
+              </li>
+            ))}
+          </ul>
+          {totalPages > 1 && (
+            <div className="blog-comment-pagination">
+              <button disabled={commentPage <= 1} onClick={() => setCommentPage(commentPage - 1)}>‹</button>
+              <span>{commentPage} / {totalPages}</span>
+              <button disabled={commentPage >= totalPages} onClick={() => setCommentPage(commentPage + 1)}>›</button>
+            </div>
+          )}
+        </>
       ) : (
         <p className="blog-comments-empty">まだコメントはありません。</p>
       )}
@@ -75,11 +92,11 @@ function BlogCommentSection({ currentPhase }: { currentPhase: number }): JSX.Ele
 }
 
 const topNews = [
-  { no: 1, date: '2025.03.10', text: '春の学び会（第二回）のご案内', path: '/news-1-82310' },
-  { no: 2, date: '2025.02.20', text: '施設メンテナンスに伴う一時休館のお知らせ（2月28日）', path: '/news-2-47291' },
-  { no: 3, date: '2025.01.15', text: '新年合同集会・懇親の会 開催報告', path: '/news-3-63047' },
-  { no: 4, date: '2024.12.05', text: '冬季休会期間のご案内（12月26日〜1月5日）', path: '/news-4-95182' },
-  { no: 5, date: '2024.11.18', text: '子ども向け「ことばと学び」ワークショップ 参加者募集', path: '/news-5-31876' },
+  { no: 1, date: '2022.03.10', text: '春の学び会（第二回）のご案内', path: '/news-1-82310' },
+  { no: 2, date: '2022.02.20', text: '施設メンテナンスに伴う一時休館のお知らせ（2月28日）', path: '/news-2-47291' },
+  { no: 3, date: '2022.01.15', text: '新年合同集会・懇親の会 開催報告', path: '/news-3-63047' },
+  { no: 4, date: '2021.12.05', text: '冬季休会期間のご案内（12月26日〜1月5日）', path: '/news-4-95182' },
+  { no: 5, date: '2021.11.18', text: '子ども向け「ことばと学び」ワークショップ 参加者募集', path: '/news-5-31876' },
 ];
 
 const topCards = [
@@ -118,6 +135,7 @@ function TopPageContent({ page }: { page: ArgPage }): JSX.Element {
   return (
     <article className="arg-page-content page-main">
       <section className="top-hero">
+        <img src="/images/top-hero.png" alt="" className="top-hero-img" />
         <p className="top-hero-catch">共に学び、共に歩む</p>
         <p className="top-hero-sub">
           福音継承教育会は、地域に根ざした教育共同体として、子どもたちの健やかな成長と
@@ -130,7 +148,6 @@ function TopPageContent({ page }: { page: ArgPage }): JSX.Element {
         <ul className="top-news-list">
           {topNews.map((item) => (
             <li key={item.date} className="top-news-item">
-              <span className="top-news-no">No.{item.no}</span>
               <span className="top-news-date">{item.date}</span>
               <Link className="top-news-link" to={item.path}>{item.text}</Link>
             </li>
@@ -155,6 +172,7 @@ function TopPageContent({ page }: { page: ArgPage }): JSX.Element {
       <section className="top-section">
         <h3 className="top-section-heading">会長ご挨拶</h3>
         <div className="top-message">
+          <img src="/images/top-president.png" alt="" className="top-president-img" />
           <p className="top-message-text">
             日々の学びの積み重ねが、人を育て、地域をつなぎます。当会では、一人ひとりが安心して集い、ともに歩める場を、これからも丁寧に整えてまいります。ご縁がありましたら、どうかお気軽にお声がけください。
           </p>
@@ -273,6 +291,18 @@ function renderBodyByPage(page: ArgPage, currentPhase: number): JSX.Element[] {
 export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
   useEffect(() => {
     markPageRead(page);
+    if (page.siteType === 'blog' && page.slug === '404') {
+      document.title = '404 Not Found';
+    } else if (page.siteType === 'blog') {
+      document.title = '依乃の備忘録';
+    } else if (page.siteType === 'main') {
+      document.title = '福音継承教育会';
+    } else if (page.siteType === 'archive') {
+      document.title = '資料室';
+    } else {
+      document.title = 'ARG';
+    }
+    return () => { document.title = 'ARG'; };
   }, [page]);
 
   const phaseOneEntryPath = pages.find((p) => p.phaseOrder === 1 && p.phaseIndex === 1)?.path;
@@ -293,6 +323,13 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
   const content = (
     <article className={`arg-page-content page-${page.siteType}`}>
       <h2>{page.title}</h2>
+      {(page.images ?? []).length > 0 ? (
+        <div className="record-photos">
+          {(page.images ?? []).map((src, i) => (
+            <img key={i} src={src} alt="" className="record-photo" />
+          ))}
+        </div>
+      ) : null}
       <section className="body-section">{renderBodyByPage(page, currentPhase)}</section>
       {showPhaseOneEntryLink ? (
         <p className="body-note-link">
@@ -306,6 +343,15 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
               <figcaption>画像プロンプト {index + 1}</figcaption>
               <p>{prompt}</p>
             </figure>
+          ))}
+        </section>
+      ) : null}
+      {(page.pdfs ?? []).length > 0 ? (
+        <section className="embedded-pdfs">
+          {(page.pdfs ?? []).map((src, i) => (
+            <div key={i} className="embedded-pdf-wrap">
+              <iframe src={src} className="embedded-pdf" title={`添付資料 ${i + 1}`} />
+            </div>
           ))}
         </section>
       ) : null}
@@ -339,6 +385,15 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
               </div>
             </details>
             <section className="body-section">{renderBodyByPage(page, currentPhase)}</section>
+            {(page.images ?? []).length > 0 ? (
+              <section className="blog-images">
+                {(page.images ?? []).map((src, i) => (
+                  <figure key={i} className="blog-image-figure">
+                    <img src={src} alt="" className="blog-image" />
+                  </figure>
+                ))}
+              </section>
+            ) : null}
             {showPhaseOneEntryLink ? (
               <p className="body-note-link">
                 <Link to={phaseOneEntryPath!}>トップページへ</Link>

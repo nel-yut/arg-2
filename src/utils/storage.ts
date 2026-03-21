@@ -104,7 +104,19 @@ export function readBlogComments(): string[] {
 export function writeBlogComment(comment: string): void {
   try {
     const comments = readBlogComments();
-    localStorage.setItem(BLOG_COMMENTS_KEY, JSON.stringify([...comments, comment]));
+    localStorage.setItem(BLOG_COMMENTS_KEY, JSON.stringify([comment, ...comments]));
+  } catch {
+    // noop
+  }
+}
+
+export function clearAllState(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEYS.currentPhase);
+    localStorage.removeItem(STORAGE_KEYS.readPages);
+    localStorage.removeItem(STORAGE_KEYS.blogDead);
+    localStorage.removeItem(SEARCH_HISTORY_KEY);
+    localStorage.removeItem(BLOG_COMMENTS_KEY);
   } catch {
     // noop
   }
