@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import type { ArgPage } from '../types/page';
 import { MainSiteLayout } from '../layouts/MainSiteLayout';
 import { ArchiveLayout } from '../layouts/ArchiveLayout';
@@ -17,7 +17,6 @@ interface ArgContentPageProps {
 const aboutSectionHeadings = new Set(['団体理念', '設立目的', '活動内容', '教育方針']);
 
 const BLOG_COMMENT_TRIGGER = '/2019-04-05-77578';
-const BLOG_DEAD_REDIRECT = '/record-defense-67748';
 
 const BLOG_POST_META: Record<string, { date: string; category: string }> = {
   'inquiry': { date: '2021年11月10日', category: '友人のこと' },
@@ -29,7 +28,6 @@ function BlogCommentSection({ currentPhase }: { currentPhase: number }): JSX.Ele
   const [draft, setDraft] = useState('');
   const [comments, setComments] = useState<string[]>(() => readBlogComments());
   const [commentPage, setCommentPage] = useState(1);
-  const navigate = useNavigate();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();

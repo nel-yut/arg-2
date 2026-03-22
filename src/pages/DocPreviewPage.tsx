@@ -353,7 +353,7 @@ function Dorm6Alumni(): JSX.Element {
 /* ─────────────────── 6. beki-taisho-koho ─────────── */
 
 function BekiTaishoKoho(): JSX.Element {
-  const rows: [React.ReactNode, React.ReactNode, string, string][] = [
+  const rows: [React.ReactNode, React.ReactNode, React.ReactNode, string][] = [
     [redact(70), '神田　愛', '照合済', '別名義あり'],
     ['栗原　里奈',   redact(80), '照合済', ''],
     ['結城　春香',   redact(80), '照合済', ''],
