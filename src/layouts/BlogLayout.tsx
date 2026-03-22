@@ -11,6 +11,7 @@ export function BlogLayout({ children }: PropsWithChildren): JSX.Element {
 
       <main className="blog-main">
         <section className="blog-content">{children}</section>
+
         <aside className="blog-sidebar" aria-label="サイドバー">
           <section className="blog-sidebar-section">
             <h2>プロフィール</h2>
@@ -36,6 +37,9 @@ export function BlogLayout({ children }: PropsWithChildren): JSX.Element {
           </section>
         </aside>
       </main>
+      <footer className="site-footer">
+        <p>本サイトはフィクションです。実際の個人・団体とは一切関係ありません。©Nel_HIME</p>
+      </footer>
     </div>
   );
 }

@@ -51,6 +51,22 @@ export function writeBlogDeadFlag(): void {
   }
 }
 
+export function readDefenseVisitedFlag(): boolean {
+  try {
+    return localStorage.getItem(STORAGE_KEYS.defenseVisited) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+export function writeDefenseVisitedFlag(): void {
+  try {
+    localStorage.setItem(STORAGE_KEYS.defenseVisited, 'true');
+  } catch {
+    // noop
+  }
+}
+
 export interface SearchHistoryEntry {
   path: string;
   title: string;
@@ -115,6 +131,7 @@ export function clearAllState(): void {
     localStorage.removeItem(STORAGE_KEYS.currentPhase);
     localStorage.removeItem(STORAGE_KEYS.readPages);
     localStorage.removeItem(STORAGE_KEYS.blogDead);
+    localStorage.removeItem(STORAGE_KEYS.defenseVisited);
     localStorage.removeItem(SEARCH_HISTORY_KEY);
     localStorage.removeItem(BLOG_COMMENTS_KEY);
   } catch {

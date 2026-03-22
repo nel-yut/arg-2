@@ -136,6 +136,9 @@ export function MainSiteLayout({ children, showSearch = true }: MainSiteLayoutPr
       <main>
         <section className="main-content-shell">{children}</section>
       </main>
+      <footer className="site-footer">
+        <p>本サイトはフィクションです。実際の個人・団体とは一切関係ありません。©Nel_HIME</p>
+      </footer>
     </div>
   );
 }

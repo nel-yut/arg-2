@@ -4,5 +4,6 @@ interface PhaseBadgeProps {
 }
 
 export function PhaseBadge({ phaseLabel, phaseIndex }: PhaseBadgeProps): JSX.Element {
-  return <aside className="phase-badge">{`${phaseLabel} (${phaseIndex})`}</aside>;
+  const label = phaseLabel === 'Phase-End' ? phaseLabel : `${phaseLabel} (${phaseIndex})`;
+  return <aside className="phase-badge">{label}</aside>;
 }

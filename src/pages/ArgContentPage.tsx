@@ -7,7 +7,7 @@ import { BlogLayout } from '../layouts/BlogLayout';
 import { PhaseBadge } from '../components/PhaseBadge';
 import { markPageRead, getPhaseState } from '../features/phase/phaseStore';
 import { pages, getResolvedPagesForPhase } from '../features/pages/pageResolver';
-import { readBlogComments, writeBlogComment, writeBlogDeadFlag } from '../utils/storage';
+import { readBlogComments, writeBlogComment, writeBlogDeadFlag, writeDefenseVisitedFlag } from '../utils/storage';
 import { parseRedactSegments } from '../utils/redact';
 
 interface ArgContentPageProps {
@@ -16,7 +16,7 @@ interface ArgContentPageProps {
 
 const aboutSectionHeadings = new Set(['団体理念', '設立目的', '活動内容', '教育方針']);
 
-const BLOG_COMMENT_TRIGGER = '/2024-09-18-77578';
+const BLOG_COMMENT_TRIGGER = '/2019-04-05-77578';
 const BLOG_DEAD_REDIRECT = '/record-defense-67748';
 
 const BLOG_POST_META: Record<string, { date: string; category: string }> = {
@@ -36,9 +36,8 @@ function BlogCommentSection({ currentPhase }: { currentPhase: number }): JSX.Ele
     const trimmed = draft.trim();
     if (!trimmed) return;
 
-    if (currentPhase >= 4 && trimmed === BLOG_COMMENT_TRIGGER) {
+    if (currentPhase >= 4 && trimmed.includes(BLOG_COMMENT_TRIGGER)) {
       writeBlogDeadFlag();
-      navigate(BLOG_DEAD_REDIRECT);
       return;
     }
 
@@ -232,7 +231,16 @@ function renderDefaultBody(body: string, currentPhase: number): JSX.Element[] {
     .split(/\r?\n\r?\n/)
     .map((block) => block.trim())
     .filter((block) => block.length > 0)
-    .map((block, index) => renderParagraphWithBreaks(block, `body-${index}`, currentPhase));
+    .map((block, index) => {
+      if (block.startsWith('## ')) {
+        return (
+          <h3 key={`body-h-${index}`} className="body-subheading">
+            {block.slice(3)}
+          </h3>
+        );
+      }
+      return renderParagraphWithBreaks(block, `body-${index}`, currentPhase);
+    });
 }
 
 function renderAboutBody(body: string, currentPhase: number): JSX.Element[] {
@@ -289,8 +297,13 @@ function renderBodyByPage(page: ArgPage, currentPhase: number): JSX.Element[] {
 }
 
 export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
   useEffect(() => {
     markPageRead(page);
+    if (page.path === '/record-defense-67748') {
+      writeDefenseVisitedFlag();
+    }
     if (page.siteType === 'blog' && page.slug === '404') {
       document.title = '404 Not Found';
     } else if (page.siteType === 'blog') {
@@ -326,7 +339,7 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
       {(page.images ?? []).length > 0 ? (
         <div className="record-photos">
           {(page.images ?? []).map((src, i) => (
-            <img key={i} src={src} alt="" className="record-photo" />
+            <img key={i} src={src} alt="" className="record-photo record-photo-zoomable" onClick={() => setLightboxSrc(src)} />
           ))}
         </div>
       ) : null}
@@ -347,12 +360,15 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
         </section>
       ) : null}
       {(page.pdfs ?? []).length > 0 ? (
-        <section className="embedded-pdfs">
-          {(page.pdfs ?? []).map((src, i) => (
-            <div key={i} className="embedded-pdf-wrap">
-              <iframe src={src} className="embedded-pdf" title={`添付資料 ${i + 1}`} />
-            </div>
-          ))}
+        <section className="pdf-downloads">
+          {(page.pdfs ?? []).map((src, i) => {
+            const filename = src.split('/').pop() ?? src;
+            return (
+              <a key={i} href={src} download className="pdf-download-link">
+                📄 {filename}
+              </a>
+            );
+          })}
         </section>
       ) : null}
       <PhaseBadge phaseLabel={page.phaseLabel} phaseIndex={page.phaseIndex} />
@@ -368,6 +384,7 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
           <section className="blog-404-content">
             <p className="blog-404-code">404 Not Found</p>
             <p className="blog-404-message">このページは見つかりませんでした。</p>
+            <PhaseBadge phaseLabel={page.phaseLabel} phaseIndex={page.phaseIndex} />
           </section>
         ) : (
           <>
@@ -422,9 +439,15 @@ export function ArgContentPage({ page }: ArgContentPageProps): JSX.Element {
     );
   }
 
+  const lightbox = lightboxSrc ? (
+    <div className="lightbox-backdrop" onClick={() => setLightboxSrc(null)}>
+      <img src={lightboxSrc} alt="" className="lightbox-img" />
+    </div>
+  ) : null;
+
   if (page.siteType === 'archive') {
-    return <ArchiveLayout showSearch={showSearch}>{content}</ArchiveLayout>;
+    return <><ArchiveLayout showSearch={showSearch}>{content}</ArchiveLayout>{lightbox}</>;
   }
 
-  return <MainSiteLayout showSearch={showSearch}>{content}</MainSiteLayout>;
+  return <><MainSiteLayout showSearch={showSearch}>{content}</MainSiteLayout>{lightbox}</>;
 }

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
 /* ─────────────────── shared helpers ─────────────────── */
@@ -268,7 +269,7 @@ function ProfileTonoRecord(): JSX.Element {
           <p>入信時より従順な反応が見られ、課程中の逸脱記録は最小限に抑えられていた。対人場面での予測可能性は高水準で維持された。</p>
           <p>第6教育寮課程を経て、照合処理の対象となる。照合対象として記録されている別名義は{redact(80)}。照合ファイルにおける参照先は「榊原澄」との関連が示されており、別記対象照合表に詳細が記載されている。</p>
           <p>{redact(200)}</p>
-          <p>渡航巡礼の対象として選定され、平成{redact(30)}年の出航記録に組み込まれた。現地側への引渡し完了。以後の経過は後続資料を参照。</p>
+          <p>渡航巡礼の対象として選定され、平成{redact(30)}年の出航記録に組み込まれた。搬送途中に重度発作、現地到着後死亡確認。引渡未了。以後の経過は後続資料を参照。</p>
         </div>
 
         <div style={{ background: '#fff8e0', border: '1px solid #d4aa00', padding: '8px 12px', fontSize: 10, color: '#7a5500', marginTop: 16 }}>
@@ -276,6 +277,148 @@ function ProfileTonoRecord(): JSX.Element {
         </div>
       </div>
     </div>
+  );
+}
+
+/* ─────────────────── 5. dorm-6-alumni ─────────── */
+
+function Dorm6Alumni(): JSX.Element {
+  const rows: [string, React.ReactNode, string, string, string][] = [
+    ['5-001', redact(70), 'H29.03', '修了', ''],
+    ['5-002', redact(70), 'H29.03', '修了', ''],
+    ['5-003', redact(70), 'H30.03', '修了', ''],
+    ['6-001', redact(70), 'H28.03', '修了', ''],
+    ['6-002', redact(70), 'H28.09', '修了', ''],
+    ['6-003', redact(70), 'H29.03', '修了', ''],
+    ['6-004', redact(70), 'H29.09', '■', '※別記参照'],
+  ];
+
+  return (
+    <>
+      <style>{`
+        @media print {
+          .debug-bar { display: none !important; }
+          @page { size: A4 portrait; margin: 20mm; }
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          body, html { min-height: 0 !important; height: auto !important; }
+          div { min-height: 0 !important; }
+        }
+      `}</style>
+      <div className="debug-bar" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, background: '#222', color: '#eee', padding: '6px 16px', display: 'flex', gap: 12, alignItems: 'center', fontFamily: 'sans-serif', fontSize: 13 }}>
+        <span>第6教育寮 修了者一覧</span>
+        <button onClick={() => window.print()} style={{ marginLeft: 'auto', padding: '3px 14px', cursor: 'pointer' }}>印刷 / PDF保存</button>
+      </div>
+      <div style={{ paddingTop: 48, background: '#fff', minHeight: '100vh' }}>
+        <div style={{ background: '#fff', fontFamily: '"Hiragino Kaku Gothic ProN", "Meiryo", sans-serif', color: '#111', maxWidth: 640, margin: '0 auto', padding: '24px 40px' }}>
+          <div style={{ fontSize: 10, color: '#555', textAlign: 'center', marginBottom: 4 }}>
+            管理番号：DM6-LIST-2017　　内部資料
+          </div>
+          <h1 style={{ fontSize: 20, fontWeight: 700, letterSpacing: 6, textAlign: 'center', margin: '0 0 2px', borderBottom: '2px solid #111', paddingBottom: 8 }}>
+            第 6 教 育 寮　　修 了 者 一 覧
+          </h1>
+          <div style={{ fontSize: 11, textAlign: 'center', margin: '8px 0 16px', color: '#333' }}>
+            平成30年3月末現在
+          </div>
+
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
+            <thead>
+              <tr style={{ background: '#e0e0e0' }}>
+                {['識別番号', '氏名', '修了年月', '区分', '備考'].map(h => (
+                  <th key={h} style={{ border: '1px solid #999', padding: '5px 8px', fontWeight: 700, textAlign: 'center' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(([id, name, date, status, note], i) => (
+                <tr key={i}>
+                  <td style={{ border: '1px solid #999', padding: '6px 8px', textAlign: 'center' }}>{id}</td>
+                  <td style={{ border: '1px solid #999', padding: '6px 8px' }}>{name}</td>
+                  <td style={{ border: '1px solid #999', padding: '6px 8px', textAlign: 'center' }}>{date}</td>
+                  <td style={{ border: '1px solid #999', padding: '6px 8px', textAlign: 'center' }}>{status}</td>
+                  <td style={{ border: '1px solid #999', padding: '6px 8px' }}>{note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <p style={{ fontSize: 10, color: '#444', marginTop: 12 }}>
+            ■：非開示（管理部のみ閲覧可）　　※別記参照：別記対象照合表を参照のこと
+          </p>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ─────────────────── 6. beki-taisho-koho ─────────── */
+
+function BekiTaishoKoho(): JSX.Element {
+  const rows: [React.ReactNode, React.ReactNode, string, string][] = [
+    [redact(70), '神田　愛', '照合済', '別名義あり'],
+    ['栗原　里奈',   redact(80), '照合済', ''],
+    ['結城　春香',   redact(80), '照合済', ''],
+    [redact(70),    redact(80), '照合済', '※照合先：別記'],
+    [redact(70),    redact(80), redact(40), ''],
+    [redact(70),    redact(80), redact(40), ''],
+    [redact(70),    redact(80), redact(40), '（削除済）'],
+  ];
+
+  return (
+    <>
+      <style>{`
+        @media print {
+          .debug-bar { display: none !important; }
+          @page { size: A4 portrait; margin: 20mm; }
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+      `}</style>
+      <div className="debug-bar" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, background: '#222', color: '#eee', padding: '6px 16px', display: 'flex', gap: 12, alignItems: 'center', fontFamily: 'sans-serif', fontSize: 13 }}>
+        <span>別記対象照合表</span>
+        <button onClick={() => window.print()} style={{ marginLeft: 'auto', padding: '3px 14px', cursor: 'pointer' }}>印刷 / PDF保存</button>
+      </div>
+      <div style={{ paddingTop: 48, background: '#fff', minHeight: '100vh' }}>
+        <div style={{ background: '#fff', fontFamily: '"Hiragino Kaku Gothic ProN", "Meiryo", sans-serif', color: '#111', maxWidth: 680, margin: '0 auto', padding: '40px 48px' }}>
+          {/* doc meta */}
+          <div style={{ fontSize: 10, color: '#555', textAlign: 'center', marginBottom: 8 }}>
+            管理番号：RN-2017-002　　内部資料　閲覧制限あり
+          </div>
+
+          {/* title */}
+          <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: 6, textAlign: 'center', margin: '0 0 4px', borderBottom: '2px solid #111', paddingBottom: 10 }}>
+            別 記 対 象 照 合 表
+          </h1>
+
+          <div style={{ fontSize: 11, textAlign: 'center', margin: '10px 0 24px', color: '#333' }}>
+            更新：平成29年4月
+          </div>
+
+          {/* table */}
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+            <thead>
+              <tr style={{ background: '#e0e0e0' }}>
+                {['登録氏名', '別名義', '照合状態', '備考'].map(h => (
+                  <th key={h} style={{ border: '1px solid #999', padding: '6px 12px', fontWeight: 700, textAlign: 'center' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(([name, alias, status, note], i) => (
+                <tr key={i}>
+                  <td style={{ border: '1px solid #999', padding: '6px 12px' }}>{name}</td>
+                  <td style={{ border: '1px solid #999', padding: '6px 12px' }}>{alias}</td>
+                  <td style={{ border: '1px solid #999', padding: '6px 12px', textAlign: 'center' }}>{status}</td>
+                  <td style={{ border: '1px solid #999', padding: '6px 12px', fontSize: 11, color: '#333' }}>{note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <p style={{ fontSize: 10, color: '#444', marginTop: 16 }}>
+            ■：管理部限定閲覧。本表の複製・持出は禁止。
+          </p>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -287,6 +430,8 @@ const DOCS: Record<string, () => JSX.Element> = {
   'dorm-3-public-record': Dorm3PublicRecord,
   'photo-record-loss': PhotoRecordLoss,
   'profile-tono-record': ProfileTonoRecord,
+  'dorm-6-alumni': Dorm6Alumni,
+  'beki-taisho-koho': BekiTaishoKoho,
 };
 
 export const DOC_PREVIEW_SLUGS = Object.keys(DOCS);
